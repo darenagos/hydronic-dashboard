@@ -1,36 +1,61 @@
 import "./App.css";
+import React from "react";
+import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
+import BusinessPage from "./components/BusinessPage";
+import EngineerPage from "./components/EngineerPage";
 
 function App() {
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-10">
-        <div className="max-w-5xl mx-auto px-6">
-          <h1 className="text-4xl font-extrabold">Hydronic Dashboard</h1>
-          <p className="mt-2 text-lg opacity-90">Visualize and analyze hydronic system performance over time</p>
-        </div>
-      </header>
+    <BrowserRouter>
+      <div className="min-h-screen bg-slate-50">
+        <header className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-6">
+          <div className="max-w-5xl mx-auto px-6 flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-extrabold">Hydronic Dashboard</h1>
+              <p className="mt-1 text-sm opacity-90">
+                Visualize system performance
+              </p>
+            </div>
 
-      <main className="max-w-5xl mx-auto px-6 py-10">
-        <section className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-2xl font-semibold">Overview</h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Upload a CSV to compute deltaT, pressure drop and efficiency metrics. This is a minimal starter page using Tailwind CSS.
-          </p>
+            <nav className="space-x-2">
+              <NavLink
+                to="/business"
+                className={({ isActive }) =>
+                  `px-4 py-2 rounded-md font-medium ${
+                    isActive ? "bg-white text-slate-700" : "bg-white/20"
+                  }`
+                }
+              >
+                Business
+              </NavLink>
 
-          <div className="mt-6 flex gap-4">
-            <label className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md cursor-pointer hover:bg-blue-700">
-              <input type="file" accept=".csv" className="hidden" />
-              Upload CSV
-            </label>
-            <button className="px-4 py-2 border rounded-md">Sample Data</button>
+              <NavLink
+                to="/engineer"
+                className={({ isActive }) =>
+                  `px-4 py-2 rounded-md font-medium ${
+                    isActive ? "bg-white text-slate-700" : "bg-white/20"
+                  }`
+                }
+              >
+                Engineer
+              </NavLink>
+            </nav>
           </div>
-        </section>
-      </main>
+        </header>
 
-      <footer className="max-w-5xl mx-auto px-6 py-6 text-sm text-gray-500">
-        Built for hydronic systems • Designed to be extended
-      </footer>
-    </div>
+        <main className="max-w-5xl mx-auto px-6 py-10">
+          <Routes>
+            <Route path="/" element={<BusinessPage />} />
+            <Route path="/business" element={<BusinessPage />} />
+            <Route path="/engineer" element={<EngineerPage />} />
+          </Routes>
+        </main>
+
+        <footer className="max-w-5xl mx-auto px-6 py-6 text-sm text-gray-500">
+          Built for hydronic systems
+        </footer>
+      </div>
+    </BrowserRouter>
   );
 }
 

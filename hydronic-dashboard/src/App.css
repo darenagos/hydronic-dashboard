@@ -1,8 +1,12 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  /* full-bleed app container so backgrounds and header can span the viewport
+     content inside App.jsx still uses Tailwind's max-w-5xl for centered content */
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 .logo {

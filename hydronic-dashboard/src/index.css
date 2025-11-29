@@ -24,8 +24,7 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  /* allow the app to occupy the full viewport; inner content remains constrained by Tailwind classes */
   min-width: 320px;
   min-height: 100vh;
 }
