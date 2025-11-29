@@ -22,7 +22,7 @@ function App() {
                 to="/business"
                 className={({ isActive }) =>
                   `px-4 py-2 rounded-md font-medium ${
-                    isActive ? "bg-white text-slate-700" : "bg-white/20"
+                    isActive ? "bg-white text-slate-700" : "bg-white/70"
                   }`
                 }
               >
@@ -33,7 +33,7 @@ function App() {
                 to="/engineer"
                 className={({ isActive }) =>
                   `px-4 py-2 rounded-md font-medium ${
-                    isActive ? "bg-white text-slate-700" : "bg-white/20"
+                    isActive ? "bg-white text-slate-700" : "bg-white/70"
                   }`
                 }
               >
@@ -43,7 +43,7 @@ function App() {
           </div>
         </header>
 
-        <main className="max-w-5xl mx-auto px-6 py-10">
+        <main className="max-w-5xl mx-auto px-6 py-10 ">
           <Routes>
             <Route path="/" element={<BusinessPage />} />
             <Route path="/business" element={<BusinessPage />} />
