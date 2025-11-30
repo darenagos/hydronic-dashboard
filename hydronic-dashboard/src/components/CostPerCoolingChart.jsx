@@ -71,12 +71,12 @@ export default function CostPerCoolingChart({ rows }) {
 
   return (
     <div className="w-full">
-      <div className="mb-2 flex items-center gap-2 text-xs justify-start">
+      <div className="mb-3 flex items-center gap-2 text-sm">
         <span className="font-medium">Month:</span>
         <select
           value={selectedMonthIndex}
           onChange={(e) => setSelectedMonthIndex(Number(e.target.value))}
-          className="border rounded px-2 py-1 text-xs bg-white text-black"
+          className="border rounded px-2 py-1 text-sm bg-white"
         >
           <option value={-1}>All time</option>
           {monthKeys.map((key, idx) => (
