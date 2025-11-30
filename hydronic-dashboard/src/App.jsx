@@ -26,7 +26,7 @@ function App() {
                   }`
                 }
               >
-                Business
+                Business Persona
               </NavLink>
 
               <NavLink
@@ -37,13 +37,13 @@ function App() {
                   }`
                 }
               >
-                Engineer
+                Engineer Persona
               </NavLink>
             </nav>
           </div>
         </header>
 
-        <main className="max-w-5xl mx-auto px-6 py-10 ">
+        <main className="max-w-6xl mx-auto px-6 py-10 ">
           <Routes>
             <Route path="/" element={<BusinessPage />} />
             <Route path="/business" element={<BusinessPage />} />
@@ -51,7 +51,7 @@ function App() {
           </Routes>
         </main>
 
-        <footer className="max-w-5xl mx-auto px-6 py-6 text-sm text-gray-500">
+        <footer className="max-w-6xl mx-auto px-6 py-6 text-sm text-gray-500">
           Built for hydronic systems
         </footer>
       </div>
