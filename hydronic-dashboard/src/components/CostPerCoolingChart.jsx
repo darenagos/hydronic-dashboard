@@ -11,37 +11,10 @@ import {
 import { calculateMetrics } from "../utils/kpi";
 
 export default function CostPerCoolingChart({ rows }) {
-  const [selectedMonthIndex, setSelectedMonthIndex] = React.useState(-1); // -1 = all time
-
-  const monthKeys = React.useMemo(() => {
-    const set = new Set();
-    (rows || []).forEach((row) => {
-      if (!row.timestamp) return;
-      const ts = String(row.timestamp);
-      const key = ts.slice(0, 7); // YYYY-MM
-      if (key) set.add(key);
-    });
-    return Array.from(set.values()).sort();
-  }, [rows]);
-
   const data = React.useMemo(() => {
     if (!rows || !rows.length) return [];
-
-    let effectiveRows = rows;
-    if (selectedMonthIndex >= 0 && monthKeys[selectedMonthIndex]) {
-      const targetMonth = monthKeys[selectedMonthIndex];
-      effectiveRows = rows.filter((row) => {
-        if (!row.timestamp) return false;
-        const ts = String(row.timestamp);
-        const key = ts.slice(0, 7);
-        return key === targetMonth;
-      });
-    }
-
-    if (!effectiveRows.length) return [];
-
     // Enrich each row with KPI metrics
-    const withMetrics = effectiveRows.map((r) => calculateMetrics(r));
+    const withMetrics = rows.map((r) => calculateMetrics(r));
 
     // Group by date (YYYY-MM-DD) and take daily average of costPerCoolingDegree
     const byDay = new Map();
@@ -52,39 +25,27 @@ export default function CostPerCoolingChart({ rows }) {
       const value = Number(row.costPerCoolingDegree);
       if (!Number.isFinite(value)) return;
 
+      // calculate the sum of values in each day
       const current = byDay.get(datePart) || { sum: 0, count: 0 };
       current.sum += value;
       current.count += 1;
       byDay.set(datePart, current);
     });
 
+    // turn the map into sorted chart points
     const days = Array.from(byDay.keys()).sort();
     return days.map((day) => {
       const { sum, count } = byDay.get(day);
-      const avg = count > 0 ? sum / count : 0;
+      const avg = count > 0 ? sum / count : 0; //compute average
       return {
         day,
         costPerCooling: avg,
       };
     });
-  }, [rows, monthKeys, selectedMonthIndex]);
+  }, [rows]);
 
   return (
     <div className="w-full">
-      <div className="mb-3 flex items-center gap-2 text-sm">
-        <span className="font-medium">Month:</span>
-        <select
-          value={selectedMonthIndex}
-          onChange={(e) => setSelectedMonthIndex(Number(e.target.value))}
-          className="border rounded px-2 py-1 text-sm bg-white"
-        >
-          <option value={-1}>All time</option>
-          {monthKeys.map((key, idx) => (
-            <option key={key} value={idx}>{`Month ${idx + 1}`}</option>
-          ))}
-        </select>
-      </div>
-
       {!data.length ? (
         <p className="text-sm text-gray-500">
           No cost-per-cooling data available.
@@ -100,7 +61,7 @@ export default function CostPerCoolingChart({ rows }) {
               <XAxis
                 dataKey="day"
                 tick={{ fontSize: 10 }}
-                tickFormatter={(d) => d.slice(5)}
+                tickFormatter={(d) => d.slice(5)} //remove year
               />
               <YAxis
                 tick={{ fontSize: 10 }}

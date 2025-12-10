@@ -10,43 +10,13 @@ import {
 } from "recharts";
 
 export default function EnergyCostChart({ rows }) {
-  const [selectedMonthIndex, setSelectedMonthIndex] = React.useState(-1); // -1 = all time
-
-  const monthMap = React.useMemo(() => {
-    const map = new Map();
-    (rows || []).forEach((row) => {
-      if (!row.timestamp) return;
-      const ts = String(row.timestamp);
-      const key = ts.slice(0, 7); // "YYYY-MM"
-      if (!map.has(key)) map.set(key, []);
-      map.get(key).push(row);
-    });
-    return map;
-  }, [rows]);
-
-  const monthKeys = React.useMemo(
-    () => Array.from(monthMap.keys()).sort(),
-    [monthMap]
-  );
-
   const data = React.useMemo(() => {
-    if (!rows || !rows.length || !monthKeys.length) return [];
-
-    let effectiveRows = rows;
-    if (selectedMonthIndex >= 0 && monthKeys[selectedMonthIndex]) {
-      const targetMonth = monthKeys[selectedMonthIndex];
-      effectiveRows = rows.filter((row) => {
-        if (!row.timestamp) return false;
-        const ts = String(row.timestamp);
-        const key = ts.slice(0, 7);
-        return key === targetMonth;
-      });
-    }
+    if (!rows || !rows.length) return [];
 
     // Aggregate to daily total spend
     const byDay = new Map(); // yyyy-mm-dd -> totalCost
 
-    (effectiveRows || [])
+    (rows || [])
       .filter((row) => row.energy_cost_USD != null)
       .forEach((row) => {
         const ts = String(row.timestamp);
@@ -63,28 +33,15 @@ export default function EnergyCostChart({ rows }) {
         date,
         daily_energy_cost_USD: total,
       }));
-  }, [rows, monthKeys, selectedMonthIndex]);
+  }, [rows]);
 
   return (
     <div className="w-full flex flex-col gap-2">
       <div>
         <p className="text-xs text-gray-600">
-          This chart shows the total energy spend per day for the selected month
-          or for all data.
+          This chart shows the total energy spend per day across all available
+          data.
         </p>
-      </div>
-      <div className="flex items-center gap-2 text-sm">
-        <span className="font-medium">Month:</span>
-        <select
-          value={selectedMonthIndex}
-          onChange={(e) => setSelectedMonthIndex(Number(e.target.value))}
-          className="border rounded px-2 py-1 text-sm bg-white"
-        >
-          <option value={-1}>All time</option>
-          {monthKeys.map((key, idx) => (
-            <option key={key} value={idx}>{`Month ${idx + 1}`}</option>
-          ))}
-        </select>
       </div>
       <div className="w-full h-56">
         {!data.length ? (

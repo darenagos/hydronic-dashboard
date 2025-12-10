@@ -11,22 +11,18 @@ import EfficiencySavingsSummary from "./EfficiencySavingsSummary";
 
 export default function BusinessPage() {
   const [allRows, setAllRows] = useState([]);
-  const [energyCosts, setEnergyCosts] = useState([]);
 
   useEffect(() => {
-    async function logEnergyCosts() {
+    async function loadData() {
       try {
         const rows = await loadCsvRows("task_dashboard.xlsx - in.csv");
         setAllRows(rows);
-        const costs = rows.map((row) => row.energy_cost_USD);
-        console.log("energy_cost_USD for all rows:", costs);
-        setEnergyCosts(costs);
       } catch (error) {
-        console.error("Failed to load energy_cost_USD from CSV:", error);
+        console.error("Failed to load CSV:", error);
       }
     }
 
-    logEnergyCosts();
+    loadData();
   }, []);
 
   return (

@@ -187,7 +187,7 @@ export function computeEfficiencyLinkedSavings(rows) {
 
   const { efficientPercent = 0 } = computeEfficiencySummary(rows);
 
-  // Compute average monthly spend (same basis as other spend stats)
+  // Compute average monthly spend
   const monthTotals = new Map(); // yyyy-mm -> total
 
   (rows || []).forEach((row) => {

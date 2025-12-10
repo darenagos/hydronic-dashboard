@@ -14,33 +14,13 @@ import {
 } from "../utils/efficiency";
 
 export default function InefficiencyByHourChart({ rows }) {
-  const [selectedMonth, setSelectedMonth] = React.useState("all");
-
-  const filteredRows = React.useMemo(() => {
-    if (!rows || rows.length === 0) return [];
-    if (selectedMonth === "all") return rows;
-
-    const monthNumber = Number(selectedMonth);
-    if (!Number.isFinite(monthNumber)) return rows;
-
-    return rows.filter((row) => {
-      if (!row.timestamp) return false;
-      const ts = String(row.timestamp);
-      const [datePart] = ts.split(" ");
-      if (!datePart) return false;
-      const [, month] = datePart.split("-");
-      const m = Number(month);
-      return Number.isFinite(m) && m === monthNumber;
-    });
-  }, [rows, selectedMonth]);
-
   const data = React.useMemo(
     () =>
-      computeInefficiencyByHour(filteredRows).map((d) => ({
+      computeInefficiencyByHour(rows).map((d) => ({
         ...d,
         effPercent: 100 - d.ineffPercent,
       })),
-    [filteredRows]
+    [rows]
   );
 
   if (!data.length) {
@@ -53,21 +33,6 @@ export default function InefficiencyByHourChart({ rows }) {
 
   return (
     <div className="w-full px-2 ">
-      <div className="flex items-center justify-start mb-1 text-xs ">
-        <label className="flex items-center gap-2 text-sm">
-          <span className="font-medium">Month:</span>
-          <select
-            className="border rounded px-2 py-1 text-sm bg-white"
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(e.target.value)}
-          >
-            <option value="all">All time</option>
-            <option value="1">Month 1</option>
-            <option value="2">Month 2</option>
-            <option value="3">Month 3</option>
-          </select>
-        </label>
-      </div>
       <div>
         <p className="mt-1 text-[9px] text-gray-400 leading-snug">
           Assumed thresholds: coolingPerKWh &gt;{" "}
